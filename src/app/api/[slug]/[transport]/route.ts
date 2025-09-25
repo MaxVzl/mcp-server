@@ -4,7 +4,7 @@ import { createMcpHandler } from '@vercel/mcp-adapter';
 import { NextRequest } from 'next/server';
 
 const handler = async (request: NextRequest, { params }: { params: Promise<{ slug: string; transport: string }> }) => {
-  const { slug, transport } = await params;
+  const { slug } = await params;
 
   if (!projectExists(slug)) {
     return new Response('Project not found', { status: 404 });

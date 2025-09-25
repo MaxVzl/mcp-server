@@ -27,7 +27,7 @@ export async function loadTools(server: McpServer, slug: string) {
     // Convertir les paramètres JSON en schéma Zod
     const zodSchema = action.parameters ? 
       Object.keys(action.parameters).reduce((acc, key) => {
-        const param = action.parameters[key];
+        const param = action.parameters![key];
         if (param.type === 'string') {
           acc[key] = z.string().describe(param.description || '');
         } else if (param.type === 'number') {
@@ -35,7 +35,7 @@ export async function loadTools(server: McpServer, slug: string) {
         } else if (param.type === 'boolean') {
           acc[key] = z.boolean().describe(param.description || '');
         } else if (param.type === 'object') {
-          acc[key] = z.object(param.properties || {}).describe(param.description || '');
+          acc[key] = z.record(z.any()).describe(param.description || '');
         } else if (param.type === 'array') {
           acc[key] = z.array(z.any()).describe(param.description || '');
         } else {
@@ -49,7 +49,7 @@ export async function loadTools(server: McpServer, slug: string) {
       action.label,
       action.description,
       zodSchema,
-      async (args, extra) => {
+      async (args) => {
         console.log("args", args);
         
         // Si l'action a une URL et une méthode, faire l'appel API
@@ -59,7 +59,7 @@ export async function loadTools(server: McpServer, slug: string) {
             
             // Remplacer les paramètres d'URL (:id, :userId, etc.)
             Object.keys(args).forEach(key => {
-              const param = action.parameters[key];
+              const param = action.parameters![key];
               if (param?.in === 'path' && apiUrl.includes(`:${key}`)) {
                 apiUrl = apiUrl.replace(`:${key}`, String(args[key]));
               }
@@ -69,7 +69,7 @@ export async function loadTools(server: McpServer, slug: string) {
             if (action.method === 'GET') {
               const urlParams = new URLSearchParams();
               Object.keys(args).forEach(key => {
-                const param = action.parameters[key];
+                const param = action.parameters![key];
                 if (param?.in !== 'path') { // Seulement les paramètres non-path
                   urlParams.append(key, String(args[key]));
                 }

@@ -5,7 +5,7 @@ export interface Quote {
 }
 
 // Collection privée pour éviter les modifications directes
-let quotes: Quote[] = [];
+const quotes: Quote[] = [];
 
 // Fonctions pour manipuler la collection
 export function getAllQuotes(): Quote[] {

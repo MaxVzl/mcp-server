@@ -1,12 +1,19 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join, extname } from 'path';
 
+export interface Parameter {
+  type: string;
+  description?: string;
+  in?: string;
+  properties?: Record<string, unknown>;
+}
+
 export interface Action {
   label: string;
   description: string;
   method?: string;
   url?: string;
-  parameters?: any;
+  parameters?: Record<string, Parameter>;
 }
 
 // Fonction pour vérifier si un projet existe

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAllQuotes, addQuote } from "@/data/quotes";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json(getAllQuotes());
 }
 
