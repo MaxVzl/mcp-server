@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Predict gender",
+    "description": "Predict gender based on a name",
+    "method": "GET",
+    "url": "https://api.genderize.io",
+    "parameters": {
+      "name": {
+        "type": "string",
+        "description": "The name to predict gender for"
+      }
+    }
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "faktu": {
+      "url": "http://localhost:3000/api/faktu/mcp"
+    }
+  }
+}
