@@ -1,6 +1,18 @@
 import { Action, getActionsFile, getMarkdownContent, getProjectDocs } from "./projects";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import z from "zod";
+
+export async function loadMcpServer(slug: string, version: string) {
+  const server = new McpServer({
+    name: slug,
+    version: version
+  });
+  loadResources(server, slug);
+  loadTools(server, slug);
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+}
 
 export async function loadResources(server: McpServer, slug: string) {
   const docs = getProjectDocs(slug);

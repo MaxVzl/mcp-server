@@ -43,6 +43,7 @@ export const projectExists = (slug: string): boolean => {
 export const getActionsFile = (slug: string): Action[] | null => {
   try {
     const filePath = join(process.cwd(), 'projects', slug, 'actions.json');
+    // const filePath = join(__dirname, '..', '..', 'projects', slug, 'actions.json');
     const fileContent = readFileSync(filePath, 'utf-8');
     return JSON.parse(fileContent);
   } catch (error) {

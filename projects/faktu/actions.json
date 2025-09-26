@@ -3,13 +3,13 @@
     "label": "Get quotes",
     "description": "Get all quotes",
     "method": "GET",
-    "url": "http://localhost:3000/api/quotes"
+    "url": "https://mcp-server-peach-xi.vercel.app/api/quotes"
   },
   {
     "label": "Create quote",
     "description": "Create a new quote",
     "method": "POST",
-    "url": "http://localhost:3000/api/quotes",
+    "url": "https://mcp-server-peach-xi.vercel.app/api/quotes",
     "parameters": {
       "customer": {
         "type": "string",
