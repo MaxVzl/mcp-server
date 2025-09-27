@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "../ui/button"
-import { MessageCircleIcon, BotMessageSquareIcon, UserIcon } from "lucide-react"
+import { MessageCircleIcon, BotMessageSquareIcon, UserIcon, XIcon, SendIcon } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Textarea } from "../ui/textarea";
 import { ScrollArea } from "../ui/scroll-area";
@@ -10,6 +10,7 @@ import { Separator } from "../ui/separator";
 import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
 import { sendMessageAction, confirmFunctionCallsAction } from "@/app/[slug]/chat/chat.actions";
 import ReactMarkdown from "react-markdown";
+import { components } from "../../../mdx-components";
 
 type Input = {
   role: "user" | "assistant" | "system" | "developer";
@@ -23,6 +24,7 @@ type FunctionCall = {
 }
 
 export const Chatbot = ({ slug }: { slug: string }) => {
+  const [open, setOpen] = useState(false);
   const [input, setInput] = useState<Input[]>([
     {
       role: "assistant",
@@ -94,9 +96,11 @@ export const Chatbot = ({ slug }: { slug: string }) => {
   
   return (
     <div className="fixed bottom-4 right-4">
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button size="icon"><MessageCircleIcon className="size-4" /></Button>
+          <Button size="icon">
+            {open ? <XIcon className="size-4" /> : <MessageCircleIcon className="size-4" />}
+          </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80" align="end">
           <div className="grid gap-4">
@@ -115,13 +119,13 @@ export const Chatbot = ({ slug }: { slug: string }) => {
                         <BotMessageSquareIcon className="size-4" />
                       </div>
                     )}
-                    <Card className={`p-1 ${inp.role === "user" ? "rounded-br-none" : "rounded-bl-none"}`}>
-                      <CardContent className="p-1">
-                        <div className="prose prose-sm max-w-none text-sm">
-                          <ReactMarkdown>{inp.content}</ReactMarkdown>
-                        </div>
-                      </CardContent>
-                    </Card>
+                     <Card className={`p-1 ${inp.role === "user" ? "rounded-br-none" : "rounded-bl-none"}`}>
+                       <CardContent className="p-1">
+                         <div className="prose prose-sm max-w-none text-sm ">
+                           <ReactMarkdown components={components}>{inp.content}</ReactMarkdown>
+                         </div>
+                       </CardContent>
+                     </Card>
                   </div>
                 ))}
               </div>
@@ -145,7 +149,7 @@ export const Chatbot = ({ slug }: { slug: string }) => {
                   e.preventDefault();
                   handleSendMessage();
                 }
-              }} 
+              }}
             />
           </div>
         </PopoverContent>
