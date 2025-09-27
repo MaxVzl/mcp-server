@@ -1,18 +1,8 @@
+import { Client } from "@modelcontextprotocol/sdk/client";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { Action, getActionsFile, getMarkdownContent, getProjectDocs } from "./projects";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import z from "zod";
-
-export async function loadMcpServer(slug: string, version: string) {
-  const server = new McpServer({
-    name: slug,
-    version: version
-  });
-  loadResources(server, slug);
-  loadTools(server, slug);
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-}
 
 export async function loadResources(server: McpServer, slug: string) {
   const docs = getProjectDocs(slug);
@@ -61,9 +51,7 @@ export async function loadTools(server: McpServer, slug: string) {
       action.label,
       action.description,
       zodSchema,
-      async (args) => {
-        console.log("args", args);
-        
+      async (args) => {        
         // Si l'action a une URL et une méthode, faire l'appel API
         if (action.url && action.method) {
           try {
@@ -90,9 +78,7 @@ export async function loadTools(server: McpServer, slug: string) {
                 apiUrl += `?${urlParams.toString()}`;
               }
             }
-            
-            console.log(`Making ${action.method} request to: ${apiUrl}`);
-            
+                        
             const response = await fetch(apiUrl, {
               method: action.method,
               headers: {
@@ -106,22 +92,27 @@ export async function loadTools(server: McpServer, slug: string) {
             }
             
             const data = await response.json();
-            console.log("API response:", data);
             
             return { 
-              content: [{ 
-                type: 'text' as const, 
-                text: JSON.stringify(data, null, 2) 
-              }] 
+              content: [
+                {
+                  type: "text",
+                  text: "Tool executed successfully. Result:",
+                },
+                { 
+                  type: "text", 
+                  text: JSON.stringify(data) 
+                }
+              ]
             };
-          } catch (error) {
-            console.error("API call failed:", error);
-            return { 
-              content: [{ 
-                type: 'text' as const, 
-                text: `Error calling API: ${error instanceof Error ? error.message : 'Unknown error'}` 
-              }] 
-            };
+            } catch (error) {
+              console.error("API call failed:", error);
+              return { 
+                content: [{ 
+                  type: 'text' as const, 
+                  text: `Tool execution failed. Error: ${error instanceof Error ? error.message : 'Unknown error'}` 
+                }] 
+              };
           }
         } else {
           // Fallback pour les actions sans URL
@@ -130,4 +121,44 @@ export async function loadTools(server: McpServer, slug: string) {
       }
     );
   });
+}
+
+export async function getMcpClient(slug: string) {
+  const mcp = new Client({ name: "mcp-client-cli", version: "1.0.0" });
+
+  const transport = new StreamableHTTPClientTransport(
+    new URL(`http://localhost:3000/api/${slug}/mcp`)
+  );
+
+  await mcp.connect(transport);
+
+  return mcp;
+}
+
+export async function getResources(slug: string) {
+  const mcp = await getMcpClient(slug);
+  const listResources = await mcp.listResources();
+
+  return listResources.resources;
+}
+
+export async function readResource(slug: string, uri: string) {
+  const mcp = await getMcpClient(slug);
+  const resource = await mcp.readResource({ uri: uri });
+
+  return resource.contents[0]?.text || '';
+}
+
+export async function getTools(slug: string) {
+  const mcp = await getMcpClient(slug);
+  const listTools = await mcp.listTools();
+
+  return listTools.tools;
+}
+
+export async function callTool(slug: string, toolName: string, args: any) {
+  const mcp = await getMcpClient(slug);
+  const tool = await mcp.callTool({ name: toolName, arguments: args });
+
+  return tool.content;
 }

@@ -1,25 +1,137 @@
 [
   {
-    "label": "Get quotes",
-    "description": "Get all quotes",
+    "label": "get_customers",
+    "description": "Get all customers",
     "method": "GET",
-    "url": "https://mcp-server-peach-xi.vercel.app/api/quotes"
+    "url": "http://localhost:3000/api/customers"
   },
   {
-    "label": "Create quote",
-    "description": "Create a new quote",
+    "label": "create_customer",
+    "description": "Create a new customer",
     "method": "POST",
-    "url": "https://mcp-server-peach-xi.vercel.app/api/quotes",
+    "url": "http://localhost:3000/api/customers",
     "parameters": {
-      "customer": {
+      "name": {
         "type": "string",
         "description": "The customer name",
+        "in": "body"
+      }
+    }
+  },
+  {
+    "label": "get_customer",
+    "description": "Get a customer",
+    "method": "GET",
+    "url": "http://localhost:3000/api/customers/:id",
+    "parameters": {
+      "id": {
+        "type": "string",
+        "description": "The customer id",
+        "in": "path"
+      }
+    }
+  },
+  {
+    "label": "update_customer",
+    "description": "Update a customer",
+    "method": "PUT",
+    "url": "http://localhost:3000/api/customers/:id",
+    "parameters": {
+      "id": {
+        "type": "string",
+        "description": "The customer id",
+        "in": "path"
+      },
+      "name": {
+        "type": "string",
+        "description": "The customer name",
+        "in": "body"
+      }
+    }
+  },
+  {
+    "label": "delete_customer",
+    "description": "Delete a customer",
+    "method": "DELETE",
+    "url": "http://localhost:3000/api/customers/:id",
+    "parameters": {
+      "id": {
+        "type": "string",
+        "description": "The customer id",
+        "in": "path"
+      }
+    }
+  },
+  {
+    "label": "get_quotes",
+    "description": "Get all quotes",
+    "method": "GET",
+    "url": "http://localhost:3000/api/quotes"
+  },
+  {
+    "label": "create_quote",
+    "description": "Create a new quote",
+    "method": "POST",
+    "url": "http://localhost:3000/api/quotes",
+    "parameters": {
+      "customerId": {
+        "type": "string",
+        "description": "The customer id",
         "in": "body"
       },
       "amount": {
         "type": "number",
         "description": "The amount of the quote",
         "in": "body"
+      }
+    }
+  },
+  {
+    "label": "get_quote",
+    "description": "Get a quote",
+    "method": "GET",
+    "url": "http://localhost:3000/api/quotes/:id",
+    "parameters": {
+      "id": {
+        "type": "string",
+        "description": "The quote id",
+        "in": "path"
+      }
+    }
+  },
+  {
+    "label": "update_quote",
+    "description": "Update a quote",
+    "method": "PUT",
+    "url": "http://localhost:3000/api/quotes/:id",
+    "parameters": {
+      "id": {
+        "type": "string",
+        "description": "The quote id",
+        "in": "path"
+      },
+      "customerId": {
+        "type": "string",
+        "description": "The customer id",
+        "in": "body"
+      },
+      "amount": {
+        "type": "number",
+        "description": "The amount of the quote",
+        "in": "body"
+      }
+    }
+  },
+  {
+    "label": "delete_quote",
+    "description": "Delete a quote",
+    "method": "DELETE",
+    "url": "http://localhost:3000/api/quotes/:id",
+    "parameters": {
+      "id": {
+        "type": "string",
+        "description": "The quote id",
+        "in": "path"
       }
     }
   }

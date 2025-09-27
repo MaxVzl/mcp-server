@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllQuotes, addQuote } from "@/data/quotes";
+import { createQuote, getQuotes } from "@/data-access/quotes";
 
 export async function GET() {
-  return NextResponse.json(getAllQuotes());
+  return NextResponse.json(await getQuotes());
 }
 
 export async function POST(request: NextRequest) {
-  const { customer, amount } = await request.json();
-  const quote = { customer, amount };
-  const newQuote = addQuote(quote);
-  return NextResponse.json(newQuote);
+  return NextResponse.json(await createQuote(await request.json()));
 }

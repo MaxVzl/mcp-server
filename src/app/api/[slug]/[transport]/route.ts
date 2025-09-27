@@ -12,10 +12,20 @@ const handler = async (request: NextRequest, { params }: { params: Promise<{ slu
   
   return createMcpHandler(
     async (server) => {
-      loadResources(server, slug);
-      loadTools(server, slug);
+      await loadResources(server, slug);
+      await loadTools(server, slug);
     },
-    {},
+    {
+      serverInfo: {
+        name: slug,
+        version: "1.0.0",
+      },
+      capabilities: {
+        resources: {},
+        tools: {},
+      },
+      instructions: "You are a smart assistant that can use tools to help the user.",
+    },
     {
       basePath: `/api/${slug}`,
     }
