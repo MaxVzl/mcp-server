@@ -105,76 +105,76 @@ export default function TestPage() {
     }
   }
 
-  return (
+  return quote ? (
     <div className="flex gap-2 p-4">
-      {quote && (
-        <div className="flex flex-col gap-10 w-full">
-          <div className="flex justify-between items-start">
-            <span className="text-2xl font-bold" style={{color: quote.backgroundColor}}>{quote.label}</span>
-            <div className="flex flex-col items-end gap-2">
-              <span className="text-muted-foreground">N° du devis</span>
-              <span className="font-semibold" style={{color: quote.backgroundColor}}>{quote.number}</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="font-semibold">Résumé</span>
-            <Separator className="flex-1"/>
-          </div>
-          <div className="grid grid-cols-3">
-            <div className="flex flex-col items-start gap-2">
-              <span className="font-semibold">Nom de l'entreprise</span>
-              <span className="text-muted-foreground">Adresse</span>
-            </div>
-            <div className="flex flex-col items-start gap-2">
-              <span className="font-semibold">{quote.company}</span>
-              <span className="text-muted-foreground">{quote.address}</span>
-            </div>
-            <div className="flex flex-col items-start gap-2">
-              <span className="text-muted-foreground">Date de délivrance : {quote.dateIssued}</span>
-              <span className="text-muted-foreground">Délai de paiement : {quote.payTerms}</span>
-            </div>
-          </div>
-          <div className="flex flex-col gap-4">
-            <Table className="border-1">
-              <TableHeader style={{backgroundColor: quote.backgroundColor}}>
-                <TableRow>
-                  <TableHead className="w-5/6" style={{color: quote.textColor}}>Article</TableHead>
-                  <TableHead className="text-right" style={{color: quote.textColor}}>Qte</TableHead>
-                  <TableHead className="text-right" style={{color: quote.textColor}}>Amount</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {quote.items.map((quoteItem, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">{quoteItem.label}</TableCell>
-                    <TableCell className="text-right">{quoteItem.qty}</TableCell>
-                    <TableCell className="text-right">{quoteItem.amount}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <div className="flex justify-end">
-              <div className="grid grid-cols-2 gap-x-10 gap-y-2">
-                <span className="text-muted-foreground text-right">Sous total</span>
-                <span className="font-semibold text-right">{quote.items.reduce((sum, item) => sum + (Number(item.amount) || 0), 0)} €</span>
-                <span className="text-muted-foreground text-right">Tax</span>
-                <span className="font-semibold text-right">0 €</span>
-              </div>
-            </div>
-            <Separator/>
-            <div className="flex justify-end">
-              <div className="grid grid-cols-2 gap-x-10 gap-y-2">
-                <span className="font-semibold text-right">Sous total</span>
-                <span className="font-semibold text-right" style={{color: quote.backgroundColor}}>{quote.items.reduce((sum, item) => sum + (Number(item.amount) || 0), 0)} €</span>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-2 bg-muted p-4">
-            <span className="font-extralight text-muted-foreground">Notes</span>
-            <span>{quote.notes}</span>
+      <div className="flex flex-col gap-10 w-full">
+        <div className="flex justify-between items-start">
+          <span className="text-2xl font-bold" style={{color: quote.backgroundColor}}>{quote.label}</span>
+          <div className="flex flex-col items-end gap-2">
+            <span className="text-muted-foreground">N° du devis</span>
+            <span className="font-semibold" style={{color: quote.backgroundColor}}>{quote.number}</span>
           </div>
         </div>
-      )}
+        <div className="flex items-center gap-2">
+          <span className="font-semibold">Résumé</span>
+          <Separator className="flex-1"/>
+        </div>
+        <div className="grid grid-cols-3">
+          <div className="flex flex-col items-start gap-2">
+            <span className="font-semibold">Nom de l'entreprise</span>
+            <span className="text-muted-foreground">Adresse</span>
+          </div>
+          <div className="flex flex-col items-start gap-2">
+            <span className="font-semibold">{quote.company}</span>
+            <span className="text-muted-foreground">{quote.address}</span>
+          </div>
+          <div className="flex flex-col items-start gap-2">
+            <span className="text-muted-foreground">Date de délivrance : {quote.dateIssued}</span>
+            <span className="text-muted-foreground">Délai de paiement : {quote.payTerms}</span>
+          </div>
+        </div>
+        <div className="flex flex-col gap-4">
+          <Table className="border-1">
+            <TableHeader style={{backgroundColor: quote.backgroundColor}}>
+              <TableRow>
+                <TableHead className="w-5/6" style={{color: quote.textColor}}>Article</TableHead>
+                <TableHead className="text-right" style={{color: quote.textColor}}>Taux</TableHead>
+                <TableHead className="text-right" style={{color: quote.textColor}}>Qte</TableHead>
+                <TableHead className="text-right" style={{color: quote.textColor}}>Montant</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {quote.items.map((quoteItem, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{quoteItem.label}</TableCell>
+                  <TableCell className="text-right">{quoteItem.amount}</TableCell>
+                  <TableCell className="text-right">{quoteItem.qty}</TableCell>
+                  <TableCell className="text-right">{quoteItem.amount * quoteItem.qty}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <div className="flex justify-end">
+            <div className="grid grid-cols-2 gap-x-10 gap-y-2">
+              <span className="text-muted-foreground text-right">Sous total</span>
+              <span className="font-semibold text-right">{quote.items.reduce((sum, item) => sum + (Number(item.amount) * Number(item.qty) || 0), 0)} €</span>
+              <span className="text-muted-foreground text-right">Tax</span>
+              <span className="font-semibold text-right">0 €</span>
+            </div>
+          </div>
+          <Separator/>
+          <div className="flex justify-end">
+            <div className="grid grid-cols-2 gap-x-10 gap-y-2">
+              <span className="font-semibold text-right">Sous total</span>
+              <span className="font-semibold text-right" style={{color: quote.backgroundColor}}>{quote.items.reduce((sum, item) => sum + (Number(item.amount) * Number(item.qty) || 0), 0)} €</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2 bg-muted p-4">
+          <span className="font-extralight text-muted-foreground">Notes</span>
+          <span>{quote.notes}</span>
+        </div>
+      </div>
 
       <div className="flex flex-col gap-2 w-[400px]">
         <ScrollArea className="max-h-80" ref={scrollAreaRef}>
@@ -214,6 +214,25 @@ export default function TestPage() {
           Générer le devis
         </Button>
       </div>
+    </div>
+  ) : (
+    <div className="flex flex-col items-center justify-center gap-2 h-screen p-20">
+      <Input
+        type="text"
+        placeholder="Décrivez votre demande pour générer un devis..."
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleGenerateQuote();
+          }
+        }}
+      />
+      <Button onClick={handleGenerateQuote} disabled={loading}>
+        <SparkleIcon className="size-4" />
+        Générer le devis
+      </Button>
     </div>
   );
 }
